@@ -7,14 +7,18 @@ module MusicBox
 
     def initialize
       @socket = Socket.new(:INET, :STREAM)
-      @remote_addr = Socket.pack_sockaddr_in(PORT, HOST)
+      @server_addr = Socket.pack_sockaddr_in(PORT, HOST)
     end
 
     def play(filename)
-      @socket.connect(@remote_addr)
+      socket.connect(server_addr)
       file = File.open(filename)
       puts 'Sending data...'
-      @socket.puts file.read
+      socket.puts file.read
     end
+
+    private
+
+    attr_reader :socket, :server_addr
   end
 end
