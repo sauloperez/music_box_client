@@ -11,4 +11,8 @@ require 'music_box_client'
 filename = ARGV[0]
 
 music_box = MusicBox::Client.new
-music_box.play(filename)
+if filename
+  music_box.play(filename)
+else
+  puts 'Error: No audio file provided!'
+end
