@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+
+# add lib folder to the load path
+bin_file = Pathname.new(__FILE__).realpath
+$:.unshift File.expand_path('../../lib', bin_file)
+
+require 'music_box_client'
+
+filename = ARGV[0]
+
+music_box = MusicBox::Client.new
+music_box.play(filename)
