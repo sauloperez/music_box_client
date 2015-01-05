@@ -8,11 +8,12 @@ $:.unshift File.expand_path('../../lib', bin_file)
 
 require 'music_box_client'
 
-filename = ARGV[0]
+command = ARGV[0]
+filename = ARGV[1]
 
 music_box = MusicBox::Client.new
 if filename
-  music_box.play(filename)
+  music_box.public_send(command.to_sym, filename)
 else
   puts 'Error: No audio file provided!'
 end

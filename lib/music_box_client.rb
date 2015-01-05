@@ -5,20 +5,23 @@ module MusicBox
     PORT = 4481
     HOST = '127.0.0.1'
 
-    def initialize
-      @socket = Socket.new(:INET, :STREAM)
-      @server_addr = Socket.pack_sockaddr_in(PORT, HOST)
-    end
-
     def play(filename)
-      socket.connect(server_addr)
       file = File.open(filename)
       puts 'Sending data...'
-      socket.puts file.read
+      request "PLAY #{file.read}"
+    end
+
+    def stop(filename)
+      request 'STOP'
     end
 
     private
 
-    attr_reader :socket, :server_addr
+    def request(data)
+      client = TCPSocket.new(HOST, PORT)
+      client.write(data)
+      client.close_write
+      client.read
+    end
   end
 end
