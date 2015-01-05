@@ -1,27 +1,30 @@
+require 'byebug'
 require 'socket'
+require 'music_box_client/request'
+require 'music_box_client/play'
+require 'music_box_client/stop'
+require 'music_box_client/with_files'
 
 module MusicBox
   class Client
-    PORT = 4481
-    HOST = '127.0.0.1'
+    include WithFiles
+
+    def initialize(host)
+      @host = host
+    end
 
     def play(filename)
-      file = File.open(filename)
-      puts 'Sending data...'
-      request "PLAY #{file.read}"
+      puts "Playing #{filename}..."
+
+      request = Request::Play.new(@host, read(filename))
+      request.send
     end
 
     def stop(filename)
-      request 'STOP'
-    end
+      puts "Stoping #{filename}..."
 
-    private
-
-    def request(data)
-      client = TCPSocket.new(HOST, PORT)
-      client.write(data)
-      client.close_write
-      client.read
+      request = Request::Stop.new(@host, read(filename))
+      request.send
     end
   end
 end
